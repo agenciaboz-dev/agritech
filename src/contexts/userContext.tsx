@@ -17,7 +17,7 @@ interface UserProviderProps {
     children: React.ReactNode
 }
 
-const UserContext = createContext<UserContextValue>({} as UserContextValue)
+export const UserContext = createContext<UserContextValue>({} as UserContextValue)
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const io = useIo()

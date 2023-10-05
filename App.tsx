@@ -3,10 +3,13 @@ import { StatusBar } from "expo-status-bar"
 import { StyleSheet, Text, View } from "react-native"
 import { PaperProvider } from "react-native-paper"
 import { paperTheme } from "./src/tools/paperTheme"
+import { IoProvider } from "./src/contexts/ioContext"
+import { UserProvider } from "./src/contexts/userContext"
+import { Routes } from "./src/Router"
 
 export default function App() {
     let [loaded, error] = useFonts({
-        KGPrimaryPenmanship: require("./assets/fonts/KGPrimaryPenmanship.ttf"),
+        MalgunGothic2: require("./assets/fonts/MalgunGothic2.ttf"),
     })
 
     if (!loaded) {
@@ -14,8 +17,11 @@ export default function App() {
     }
     return (
         <PaperProvider theme={paperTheme}>
-            <Text>Open up App.tsx to start working on your app!</Text>
-            <StatusBar style="auto" />
+            <IoProvider>
+                <UserProvider>
+                    <Routes />
+                </UserProvider>
+            </IoProvider>
         </PaperProvider>
     )
 }

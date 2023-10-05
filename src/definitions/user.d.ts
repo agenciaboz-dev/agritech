@@ -7,9 +7,9 @@ declare interface User {
     cpf: string
     birth: string
     phone: string
-    image: string
-    image64: string
-    address: Address
+    image?: string
+    image64?: string
+    address?: Address
 
     employee?: Employee
     producer?: Producer
