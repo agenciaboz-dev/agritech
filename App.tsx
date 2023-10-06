@@ -9,7 +9,7 @@ import { Routes } from "./src/Router"
 
 export default function App() {
     let [loaded, error] = useFonts({
-        MalgunGothic2: require("./assets/fonts/MalgunGothic2.ttf"),
+        MalgunGothicBold: require("./assets/fonts/MalgunGothicBold.ttf"),
     })
 
     if (!loaded) {

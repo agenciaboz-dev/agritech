@@ -4,24 +4,38 @@ import { UserContext } from "../contexts/userContext"
 import { loginUser } from "../hooks/useUser"
 import { NavigationProp } from "@react-navigation/native"
 import { useIo } from "../hooks/useIo"
+import { useApi } from "../hooks/useApi"
 
 interface LoginProps {
     navigation: NavigationProp<any, any>
 }
 
 export const Login: React.FC<LoginProps> = ({ navigation }) => {
+    const api = useApi()
+    const io = useIo()
     const [login, setLogin] = useState("")
     const [password, setPassword] = useState("")
 
     const { setUser } = useContext(UserContext)
 
     const handleLogin = async () => {
-        const io = useIo()
-        const user = await loginUser(io, login, password)
-        if (user) {
-            setUser(user)
-        } else {
-            // Mostrar mensagem de erro
+        const login = (values: LoginForm, setLoading: (value: boolean) => void) => {
+            setLoading(true)
+            api.user.login({
+                data: values,
+                callback: (response: { data?: User }) => {
+                    const user = response.data
+                    if (user) {
+                        setUser(user)
+                        io.emit("client:sync", user)
+
+                        alert({ severity: "success", text: "logado" })
+                    } else {
+                        alert({ severity: "error", text: "não foi possível fazer login" })
+                    }
+                },
+                finallyCallback: () => setLoading(false),
+            })
         }
     }
     return (

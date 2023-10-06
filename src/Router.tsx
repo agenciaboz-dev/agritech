@@ -4,10 +4,14 @@ import { createNativeStackNavigator, NativeStackNavigationOptions } from "@react
 import { ImageBackground } from "react-native"
 import { Login } from "./screens/Login"
 import { Signup } from "./screens/Signup"
+import { Home } from "./screens/Home"
+import { useUser } from "./hooks/useUser"
+import { Test } from "./screens/Test"
 
 interface RouterProps {}
 
 export const Routes: React.FC<RouterProps> = ({}) => {
+    const { user } = useUser()
     const Stack = createNativeStackNavigator()
     const navigator_options: NativeStackNavigationOptions = {
         headerStyle: {
@@ -32,10 +36,17 @@ export const Routes: React.FC<RouterProps> = ({}) => {
     return (
         <NavigationContainer theme={theme}>
             {/* <ImageBackground source={} resizeMode="cover" style={{ flex: 1 }}> */}
-            <Stack.Navigator initialRouteName="Home" screenOptions={navigator_options}>
-                <Stack.Screen name="Login" component={Login} />
-                <Stack.Screen name="Signup" component={Signup} />
-            </Stack.Navigator>
+            {user ? (
+                <Stack.Navigator initialRouteName="Home" screenOptions={navigator_options}>
+                    <Stack.Screen name="Home">{(props) => <Test {...props} user={user} />}</Stack.Screen>
+                </Stack.Navigator>
+            ) : (
+                <Stack.Navigator initialRouteName="Home" screenOptions={navigator_options}>
+                    <Stack.Screen name="Home" component={Home} />
+                    <Stack.Screen name="Login" component={Login} />
+                    <Stack.Screen name="Signup" component={Signup} />
+                </Stack.Navigator>
+            )}
             {/* </ImageBackground> */}
         </NavigationContainer>
     )

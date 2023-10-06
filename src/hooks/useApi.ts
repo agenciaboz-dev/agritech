@@ -26,6 +26,12 @@ export const useApi = () => {
                 .catch((error) => defaultError(error, options.errorCallback))
                 .finally(() => defaultFinally(options.finallyCallback))
         },
+        signup: (options: ApiOptions) => {
+            api.post("/user/register", options.data)
+                .then((response) => options.callback(response))
+                .catch((error) => defaultError(error, options.errorCallback))
+                .finally(() => defaultFinally(options.finallyCallback))
+        },
 
         find: {
             username: (options: ApiOptions) => {
@@ -36,4 +42,6 @@ export const useApi = () => {
             },
         },
     }
+
+    return { user, defaultError, defaultFinally }
 }

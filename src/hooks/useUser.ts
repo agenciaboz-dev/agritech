@@ -1,35 +1,15 @@
-import { Socket } from "socket.io-client"
+import { useContext } from "react"
+import UserContext from "../contexts/userContext"
 import { useIo } from "./useIo"
 
-export const loginUser = (io: Socket, login: string, password: string) => {
-    return new Promise((resolve, reject) => {
-        io.emit("user:login", { login, password })
-        io.once("user:login:success", (user) => {
-            resolve(user)
-        })
-        io.once("user:login:failed", (error) => {
-            reject(error)
-        })
-    })
-}
+export const useUser = () => {
+    const userContext = useContext(UserContext)
+    const { user, setUser } = userContext
+    const io = useIo()
 
-export const createUser = (
-    io: Socket,
-    username: string,
-    email: string,
-    password: string,
-    name: string,
-    cpf: string,
-    birth: string,
-    phone: string
-) => {
-    return new Promise((resolve, reject) => {
-        io.emit("user:new", { username, email, password, name, cpf, birth, phone })
-        io.once("user:new:success", (user) => {
-            resolve(user)
-        })
-        io.once("user:new:failed", (error) => {
-            reject(error)
-        })
-    })
+    const login = (data: LoginForm) => {
+        io.emit("user:login", data)
+    }
+
+    return { user, login, setUser }
 }

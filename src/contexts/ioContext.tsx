@@ -2,6 +2,7 @@ import React from "react"
 import { createContext, useEffect } from "react"
 import { Socket, io as ioSocket } from "socket.io-client"
 import { url } from "../api/backend"
+import { api } from "../api"
 
 interface IoContextValue {
     io: Socket
@@ -20,8 +21,12 @@ const io = ioSocket(`ws${url}`)
 
 export const IoProvider: React.FC<IoProviderProps> = ({ children }) => {
     useEffect(() => {
-        io.once("connect_error", () => {
+        io.once("connect_error", (error) => {
+            console.log(error)
             alert("Não foi possível se conectar com o servidor, verifique sua conexão com a internet")
+            api.get("/").then((response) => {
+                console.log(response.data)
+            })
         })
 
         io.on("connect", () => {
