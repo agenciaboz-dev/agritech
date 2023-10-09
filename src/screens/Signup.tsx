@@ -1,12 +1,22 @@
 import React, { useContext, useState, useEffect } from "react"
-import { View, TextInput } from "react-native"
+import { StyleProp, TextStyle, View } from "react-native"
 import { useIo } from "../hooks/useIo"
-import { useApi } from "../hooks/useApi"
 import { useUser } from "../hooks/useUser"
 import { LinearGradient } from "expo-linear-gradient"
 import { colors } from "../style/colors"
-import { Button, Text } from "react-native-paper"
+import { Avatar, Button, Text, TextInput, Snackbar } from "react-native-paper"
 import { Formik, Form } from "formik"
+import TextInputMask from "react-native-text-input-mask"
+
+interface FormValues {
+    name: string
+    email: string
+    username: string
+    password: string
+    cpf: string
+    birth: string
+    phone: string
+}
 
 export const Signup: React.FC = () => {
     const io = useIo()
@@ -19,6 +29,19 @@ export const Signup: React.FC = () => {
     const [birth, setBirth] = useState("")
     const [phone, setPhone] = useState("")
 
+    const initialValues: FormValues = {
+        name: " ",
+        email: " ",
+        username: " ",
+        password: " ",
+        cpf: " ",
+        birth: "",
+        phone: " ",
+    }
+
+    const inputStyle = { height: 45, borderColor: colors.button }
+    const textStyle: StyleProp<TextStyle> = { fontSize: 13, fontFamily: "MalgunGothic2", justifyContent: "center" }
+
     const handleSignup = async () => {
         const data = { name, email, username, cpf, password, birth, phone }
         console.log(data)
@@ -27,7 +50,7 @@ export const Signup: React.FC = () => {
 
     useEffect(() => {
         io.on("user:signup:success", (user: User) => {
-            // feedback visual de acesso
+            alert("Cadastrado! Faça login.")
             login({ login: user.username, password: user.password })
         })
 
@@ -70,8 +93,8 @@ export const Signup: React.FC = () => {
                 <Text style={{ color: "#fff", fontSize: 23, paddingTop: 15, height: "50%" }}>Registre-se</Text>
             </LinearGradient>
 
-            <Formik initialValues={{}} onSubmit={handleSignup}>
-                {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+            <Formik initialValues={initialValues} onSubmit={handleSignup}>
+                {({ handleChange, values }) => (
                     <View
                         style={{
                             paddingTop: 20,
@@ -82,42 +105,76 @@ export const Signup: React.FC = () => {
                             borderTopRightRadius: 20,
 
                             flex: 1,
-                            gap: 20,
+                            gap: 10,
                         }}
                     >
                         <Text style={{ fontSize: 20 }}>Informações Pessoais</Text>
+                        <View style={{ flexDirection: "row", gap: 15, width: "100%", alignItems: "center" }}>
+                            <Avatar.Icon size={110} icon="account" style={{ backgroundColor: "hsl(220,9%,87%)" }} />
+                            <View style={{ flexDirection: "column", gap: 10, width: "65%" }}>
+                                <Text style={{ fontWeight: "500" }}>Foto</Text>
+                                <Text style={{ fontSize: 11 }}>
+                                    Clique na imagem ao lado para adicionar uma foto sua. A foto deve estar plenamente
+                                    visível e sem adereços.
+                                </Text>
+                            </View>
+                        </View>
                         <TextInput
-                            placeholder="Nome"
+                            mode="outlined"
+                            label={"Nome"}
                             value={name}
-                            style={{ fontFamily: "MalgunGothicBold", fontSize: 15 }}
+                            contentStyle={textStyle}
+                            outlineStyle={inputStyle}
                             onChangeText={setName}
                         />
                         <TextInput
-                            placeholder="E-mail"
-                            value={email}
-                            style={{ fontFamily: "MalgunGothicBold", fontSize: 15 }}
-                            onChangeText={setEmail}
-                        />
-                        <TextInput
-                            placeholder="Username"
-                            value={username}
-                            style={{ fontFamily: "MalgunGothicBold", fontSize: 15 }}
-                            onChangeText={setUsername}
-                        />
-                        <TextInput
-                            placeholder="CPF"
+                            mode="outlined"
+                            label={"CPF"}
                             value={cpf}
-                            style={{ fontFamily: "MalgunGothicBold", fontSize: 15 }}
+                            outlineStyle={inputStyle}
+                            style={textStyle}
                             onChangeText={setCpf}
                         />
                         <TextInput
-                            placeholder="Senha"
+                            mode="outlined"
+                            label={"E-mail"}
+                            value={email}
+                            outlineStyle={inputStyle}
+                            style={textStyle}
+                            onChangeText={setEmail}
+                        />
+                        <TextInput
+                            mode="outlined"
+                            label={"Telefone"}
+                            value={phone}
+                            outlineStyle={inputStyle}
+                            style={textStyle}
+                            onChangeText={setPhone}
+                        />
+
+                        <TextInput
+                            mode="outlined"
+                            label={"Username"}
+                            value={username}
+                            outlineStyle={inputStyle}
+                            style={textStyle}
+                            onChangeText={setUsername}
+                        />
+                        <TextInput
+                            mode="outlined"
+                            label={"Senha"}
                             secureTextEntry={true}
                             value={password}
-                            style={{ fontFamily: "MalgunGothicBold", fontSize: 15 }}
-                            onChangeText={handleChange("email")}
+                            outlineStyle={inputStyle}
+                            style={textStyle}
+                            onChangeText={handleChange("password")}
                         />
-                        <Button mode="contained" buttonColor={colors.button} onPress={handleSignup}>
+                        <Button
+                            mode="contained"
+                            labelStyle={{ fontSize: 17 }}
+                            buttonColor={colors.button}
+                            onPress={handleSignup}
+                        >
                             Cadastrar
                         </Button>
                     </View>

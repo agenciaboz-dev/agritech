@@ -57,7 +57,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                         <Button
                             mode="outlined"
                             style={{ borderColor: "#fff", width: "100%" }}
-                            labelStyle={{ color: "#fff", fontFamily: "MalgunGothicBold", fontSize: 19 }}
+                            labelStyle={{ color: "#fff", fontFamily: "MalgunGothic2", fontSize: 19 }}
                             onPress={() => navigation.navigate("Signup")}
                         >
                             Cadastre-se
@@ -66,7 +66,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                             mode="contained"
                             buttonColor={colors.button}
                             style={{ borderColor: colors.button, width: "100%" }}
-                            labelStyle={{ fontSize: 19, fontFamily: "MalgunGothicBold" }}
+                            labelStyle={{ fontSize: 19, fontFamily: "MalgunGothic2" }}
                         >
                             Entrar
                         </Button>
@@ -74,7 +74,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                 </LinearGradient>
             </View>
             <View style={{ flex: 0.08 }}>
-                <Button labelStyle={{ fontFamily: "MalgunGothicBold", fontSize: 16, color: colors.button }}>
+                <Button labelStyle={{ fontFamily: "MalgunGothic2", fontSize: 16, color: colors.button }}>
                     Termos de serviço
                 </Button>
             </View>

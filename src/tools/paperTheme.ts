@@ -4,7 +4,7 @@ import { colors } from "../style/colors"
 export const paperTheme: MD3Theme = {
     ...DefaultTheme,
 
-    fonts: configureFonts({ config: { fontFamily: "MalgunGothicBold" } }),
+    fonts: configureFonts({ config: { fontFamily: "MalgunGothic2" } }),
 
     colors: {
         ...DefaultTheme.colors,
