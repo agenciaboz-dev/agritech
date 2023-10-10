@@ -67,6 +67,7 @@ export const Home: React.FC<HomeProps> = ({ navigation }) => {
                             buttonColor={colors.button}
                             style={{ borderColor: colors.button, width: "100%" }}
                             labelStyle={{ fontSize: 19, fontFamily: "MalgunGothic2" }}
+                            onPress={() => navigation.navigate("Login")}
                         >
                             Entrar
                         </Button>

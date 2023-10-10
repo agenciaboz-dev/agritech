@@ -5,8 +5,8 @@ import { useUser } from "../hooks/useUser"
 import { LinearGradient } from "expo-linear-gradient"
 import { colors } from "../style/colors"
 import { Avatar, Button, Text, TextInput, Snackbar } from "react-native-paper"
-import { Formik, Form } from "formik"
-import TextInputMask from "react-native-text-input-mask"
+import { Formik } from "formik"
+import { NavigationProp } from "@react-navigation/native"
 
 interface FormValues {
     name: string
@@ -26,7 +26,10 @@ interface FormValues {
     complement: string
 }
 
-export const Signup: React.FC = () => {
+interface SignupProps {
+    navigation: NavigationProp<any, any>
+}
+export const Signup: React.FC<SignupProps> = ({ navigation }) => {
     const io = useIo()
     const { login, setUser } = useUser()
 
@@ -85,8 +88,11 @@ export const Signup: React.FC = () => {
 
     useEffect(() => {
         io.on("user:signup:success", (user: User) => {
-            alert("Cadastrado! Faça login.")
-            login({ login: user.username, password: user.password })
+            if (user) {
+                alert("Cadastrado! Faça login.")
+                //login({ login: user.username, password: user.password })
+                navigation.navigate("Login")
+            }
         })
 
         io.on("user:login:success", (user: User) => {
@@ -125,7 +131,7 @@ export const Signup: React.FC = () => {
                     justifyContent: "center",
                 }}
             >
-                <Text style={{ color: "#fff", fontSize: 23, paddingTop: 15, height: "50%" }}>Registre-se</Text>
+                <Text style={{ color: colors.text.white, fontSize: 23, paddingTop: 15, height: "50%" }}>Registre-se</Text>
             </LinearGradient>
 
             <Formik initialValues={initialValues} onSubmit={handleSignup}>
@@ -135,7 +141,7 @@ export const Signup: React.FC = () => {
                             paddingTop: 20,
                             padding: 20,
                             width: "100%",
-                            backgroundColor: "#fff",
+                            backgroundColor: colors.text.white,
                             borderTopLeftRadius: 20,
                             borderTopRightRadius: 20,
 
