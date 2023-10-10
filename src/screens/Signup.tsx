@@ -4,7 +4,7 @@ import { useIo } from "../hooks/useIo"
 import { useUser } from "../hooks/useUser"
 import { LinearGradient } from "expo-linear-gradient"
 import { colors } from "../style/colors"
-import { Avatar, Button, Text, TextInput, Snackbar, Checkbox, RadioButton } from "react-native-paper"
+import { Avatar, Button, Text, TextInput, Snackbar, RadioButton } from "react-native-paper"
 import { Formik } from "formik"
 import { NavigationProp } from "@react-navigation/native"
 
@@ -226,10 +226,10 @@ export const Signup: React.FC<SignupProps> = ({ navigation }) => {
                                     <TextInput
                                         mode="outlined"
                                         label={"Data de Nascimento"}
-                                        value={birth}
+                                        value={name}
                                         outlineStyle={inputStyle}
                                         style={textStyle}
-                                        onChangeText={setBirth}
+                                        onChangeText={setName}
                                     />
                                     <TextInput
                                         mode="outlined"
