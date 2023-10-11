@@ -6,7 +6,7 @@ import { NavigationProp } from "@react-navigation/native"
 import { useIo } from "../hooks/useIo"
 import { LinearGradient } from "expo-linear-gradient"
 import { colors } from "../style/colors"
-import { Text, TextInput, Button } from "react-native-paper"
+import { Text, TextInput, Button, Snackbar, ActivityIndicator } from "react-native-paper"
 import { image } from "../image"
 import input from "../style/input"
 
@@ -22,23 +22,31 @@ export const Login: React.FC<LoginProps> = ({ navigation }) => {
 
     const { setUser } = useContext(UserContext)
 
+    const [loading, setLoading] = useState(false)
+    const [snackbarVisible, setSnackbarVisible] = useState(false)
+    const [snackbarMessage, setSnackbarMessage] = useState("")
+
     const handleLogin = async (user: User | null) => {
         const data = { login, password }
 
         io.emit("client:sync", user)
         io.emit("user:login", data)
+        setLoading(true)
     }
     useEffect(() => {
         io.on("user:login:success", (user: User) => {
+            setLoading(false)
             console.log("Usuário definido:", user)
             setUser(user)
             if (user) {
-                alert("Eba, voce logou!!!!!!!!!!!!!!")
-                navigation.navigate("Home")
+                setSnackbarMessage("Logado com sucesso!")
+                setSnackbarVisible(true)
+                //navigation.navigate("Home")
             }
         })
 
         io.on("user:login:failed", () => {
+            setLoading(false)
             alert("Usuário ou senha incorreta!")
         })
 
@@ -119,11 +127,20 @@ export const Login: React.FC<LoginProps> = ({ navigation }) => {
                     onChangeText={setPassword}
                 />
                 <Button mode="contained" buttonColor={colors.button} onPress={() => handleLogin(user)}>
-                    Entrar
+                    {loading ? <ActivityIndicator animating={true} color={colors.text.white} /> : "Entrar"}
                 </Button>
                 <Button labelStyle={{ color: colors.text.black }} onPress={() => navigation.navigate("Signup")}>
                     Cadastre-se
                 </Button>
+                <View style={{ padding: 100, justifyContent: "center" }}>
+                    <Snackbar
+                        visible={snackbarVisible}
+                        onDismiss={() => setSnackbarVisible(false)}
+                        duration={Snackbar.DURATION_MEDIUM}
+                    >
+                        {snackbarMessage}
+                    </Snackbar>
+                </View>
             </View>
         </View>
     )

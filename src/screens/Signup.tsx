@@ -4,7 +4,7 @@ import { useIo } from "../hooks/useIo"
 import { useUser } from "../hooks/useUser"
 import { LinearGradient } from "expo-linear-gradient"
 import { colors } from "../style/colors"
-import { Avatar, Button, Text, TextInput, Snackbar, RadioButton } from "react-native-paper"
+import { Avatar, Button, Text, TextInput, Snackbar, RadioButton, ActivityIndicator } from "react-native-paper"
 import { Formik } from "formik"
 import { NavigationProp } from "@react-navigation/native"
 
@@ -23,7 +23,20 @@ interface FormValues {
     city: string
     cep: string
     uf: string
-    complement: string
+    complement?: string
+
+    //Employee
+    rg: number
+    gender: string
+    nationality: string
+    relationship: string
+    voter_card: string
+    work_card: string
+    military: string
+    residence: string
+
+    //Producer
+    cnpj: string
 }
 
 interface SignupProps {
@@ -32,7 +45,7 @@ interface SignupProps {
 export const Signup: React.FC<SignupProps> = ({ navigation }) => {
     const io = useIo()
     const { login, setUser } = useUser()
-    const [typeUser, setTypeUser] = useState("productor")
+    const [typeUser, setTypeUser] = useState("producer")
 
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
@@ -41,6 +54,7 @@ export const Signup: React.FC<SignupProps> = ({ navigation }) => {
     const [phone, setPhone] = useState("")
     const [birth, setBirth] = useState("")
     const [password, setPassword] = useState("")
+
     const [street, setStreet] = useState("")
     const [district, setDistrict] = useState("")
     const [number, setNumber] = useState("")
@@ -48,9 +62,23 @@ export const Signup: React.FC<SignupProps> = ({ navigation }) => {
     const [cep, setCep] = useState("")
     const [uf, setUf] = useState("")
     const [complement, setComplement] = useState("")
+
+    const [rg, setRg] = useState("")
     const [gender, setGender] = useState("F")
+    const [nationality, setNationality] = useState("")
+    const [relationship, setRelationship] = useState("")
+    const [voter_card, setVoterCard] = useState("")
+    const [work_card, setWorkCard] = useState("")
+    const [military, setMilitary] = useState("")
+    const [residence, setResidence] = useState("")
+
+    const [cnpj, setCnpj] = useState("")
 
     const [currentStep, setCurrentStep] = useState(0)
+
+    const [loading, setLoading] = useState(false)
+    const [snackbarVisible, setSnackbarVisible] = useState(false)
+    const [snackbarMessage, setSnackbarMessage] = useState("")
 
     const initialValues: FormValues = {
         name: " ",
@@ -68,6 +96,19 @@ export const Signup: React.FC<SignupProps> = ({ navigation }) => {
         cep: "",
         uf: "",
         complement: "",
+
+        //Employee
+        rg: 0,
+        gender: " ",
+        nationality: " ",
+        relationship: " ",
+        voter_card: " ",
+        work_card: " ",
+        military: " ",
+        residence: " ",
+
+        //Producer
+        cnpj: " ",
     }
 
     const inputStyle = { height: 45, borderColor: colors.button }
@@ -84,14 +125,25 @@ export const Signup: React.FC<SignupProps> = ({ navigation }) => {
             phone,
             address: { street, district, number, city, cep, uf, complement },
         }
-        console.log(data)
-        io.emit("user:signup", data)
+        if (typeUser === "employee") {
+            io.emit("user:signup", {
+                ...data,
+                employee: { rg, gender, nationality, relationship, voter_card, work_card, military, residence },
+            })
+            console.log(data)
+        } else if (typeUser === "producer") {
+            console.log(data)
+            io.emit("user:signup", { ...data, producer: { cnpj } })
+        }
+        setLoading(true)
     }
 
     useEffect(() => {
         io.on("user:signup:success", (user: User) => {
+            setLoading(false)
+            setSnackbarMessage("Cadastro realizado com sucesso!")
             if (user) {
-                alert("Cadastrado! Faça login.")
+                setSnackbarVisible(true)
                 //login({ login: user.username, password: user.password })
                 navigation.navigate("Login")
             }
@@ -102,7 +154,9 @@ export const Signup: React.FC<SignupProps> = ({ navigation }) => {
         })
 
         io.on("user:signup:failed", () => {
-            alert("Falha no cadastro")
+            setSnackbarMessage("Falha no cadastro!")
+            setSnackbarVisible(true)
+            setLoading(false)
         })
 
         return () => {
@@ -162,11 +216,11 @@ export const Signup: React.FC<SignupProps> = ({ navigation }) => {
                                         value={typeUser}
                                     >
                                         <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                            <RadioButton.IOS value="productor" />
+                                            <RadioButton.IOS value="producer" />
                                             <Text
-                                                style={{ fontWeight: typeUser == "productor" ? "800" : "400", fontSize: 18 }}
+                                                style={{ fontWeight: typeUser == "producer" ? "800" : "400", fontSize: 18 }}
                                                 onPress={() => {
-                                                    setTypeUser("productor")
+                                                    setTypeUser("producer")
                                                     setCurrentStep(1)
                                                 }}
                                             >
@@ -215,14 +269,37 @@ export const Signup: React.FC<SignupProps> = ({ navigation }) => {
                                         outlineStyle={inputStyle}
                                         onChangeText={setName}
                                     />
-                                    <TextInput
-                                        mode="outlined"
-                                        label={"CPF"}
-                                        value={cpf}
-                                        outlineStyle={inputStyle}
-                                        style={textStyle}
-                                        onChangeText={setCpf}
-                                    />
+                                    <View style={{ flexDirection: "row", gap: 7, width: "98%" }}>
+                                        <TextInput
+                                            mode="outlined"
+                                            label={"CPF"}
+                                            value={cpf}
+                                            outlineStyle={inputStyle}
+                                            style={{ ...textStyle, width: "50%" }}
+                                            onChangeText={setCpf}
+                                        />
+                                        {typeUser == "producer" && (
+                                            <TextInput
+                                                mode="outlined"
+                                                label={"CNPJ"}
+                                                value={cnpj}
+                                                outlineStyle={inputStyle}
+                                                style={{ ...textStyle, width: "50%" }}
+                                                onChangeText={setCnpj}
+                                            />
+                                        )}
+                                        {typeUser == "employee" && (
+                                            <TextInput
+                                                mode="outlined"
+                                                label={"Rg"}
+                                                value={rg}
+                                                outlineStyle={inputStyle}
+                                                style={{ ...textStyle, width: "50%" }}
+                                                onChangeText={setRg}
+                                            />
+                                        )}
+                                    </View>
+
                                     <TextInput
                                         mode="outlined"
                                         label={"Data de Nascimento"}
@@ -439,18 +516,18 @@ export const Signup: React.FC<SignupProps> = ({ navigation }) => {
                                         <TextInput
                                             mode="outlined"
                                             label={"Nº do título de eleitor"}
-                                            value={uf}
+                                            value={voter_card}
                                             outlineStyle={inputStyle}
                                             style={{ ...textStyle, width: "100%" }}
-                                            onChangeText={setUf}
+                                            onChangeText={setVoterCard}
                                         />
                                         <TextInput
                                             mode="outlined"
                                             label={"Nº da carteira de trabalho"}
-                                            value={uf}
+                                            value={work_card}
                                             outlineStyle={inputStyle}
                                             style={{ ...textStyle, width: "100%" }}
-                                            onChangeText={setUf}
+                                            onChangeText={setWorkCard}
                                         />
                                     </View>
                                     <View style={{ gap: 10 }}>
@@ -504,14 +581,14 @@ export const Signup: React.FC<SignupProps> = ({ navigation }) => {
                             </>
                         )}
 
-                        {typeUser == "productor" && currentStep == 2 && (
+                        {typeUser == "producer" && currentStep == 2 && (
                             <Button
                                 mode="contained"
                                 labelStyle={{ fontSize: 17 }}
                                 buttonColor={colors.button}
                                 onPress={handleSignup}
                             >
-                                Cadastrar
+                                {loading ? <ActivityIndicator animating={true} color={colors.text.white} /> : "Cadastrar"}
                             </Button>
                         )}
                     </View>
