@@ -181,9 +181,7 @@ export const Signup: React.FC<SignupProps> = ({ navigation }) => {
                 style={{
                     flex: 0.15,
                     width: "100%",
-
                     paddingHorizontal: 20,
-
                     justifyContent: "center",
                 }}
             >

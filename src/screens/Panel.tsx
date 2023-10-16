@@ -1,0 +1,120 @@
+import React, { useEffect, useState } from "react"
+import { Image, View } from "react-native"
+import { Button, IconButton, Snackbar, Text } from "react-native-paper"
+import { colors } from "../style/colors"
+import { useIo } from "../hooks/useIo"
+import { useUser } from "../hooks/useUser"
+import LinearGradient from "react-native-linear-gradient"
+import { image } from "../image"
+import { Employee } from "../components/Employee"
+
+interface PanelProps {
+    user: User
+}
+
+export const Panel: React.FC<PanelProps> = ({ user }) => {
+    const io = useIo()
+    const { setUser } = useUser()
+
+    const [snackbarVisible, setSnackbarVisible] = useState(false)
+    const [snackbarMessage, setSnackbarMessage] = useState("")
+
+    const handleLogout = async () => {
+        if (user) {
+            io.emit("user:logout")
+        }
+    }
+    const handleSnackbar = () => {
+        setSnackbarMessage("Snackbar!")
+        setSnackbarVisible(true)
+    }
+
+    useEffect(() => {
+        io.on("user:disconnect", () => {
+            setUser(null)
+            console.log(user)
+            alert("desconectado")
+        })
+
+        return () => {
+            io.off("user:disconnect")
+        }
+    })
+
+    return (
+        <View style={{ flex: 1, paddingTop: 22, backgroundColor: colors.button }}>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                <View style={{ flexDirection: "row", paddingBottom: 10, alignItems: "center", paddingLeft: 20, gap: 7 }}>
+                    <Image source={image.drone} style={{ width: 40 }} resizeMode="contain" />
+                    <Text style={{ color: colors.text.white, fontSize: 20 }}>Painel</Text>
+                </View>
+                <View style={{ flexDirection: "row", gap: 0 }}>
+                    <IconButton icon={"magnify"} iconColor={colors.text.white} />
+                    <IconButton icon={"bell-outline"} iconColor={colors.text.white} />
+                    <IconButton icon={"account-circle-outline"} iconColor={colors.text.white} />
+                </View>
+            </View>
+            <View
+                style={{
+                    justifyContent: "center",
+                    flex: 1,
+                    backgroundColor: colors.primary,
+                    borderTopLeftRadius: 20,
+                    borderTopRightRadius: 20,
+                    paddingTop: 10,
+                }}
+            >
+                <View
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        paddingBottom: 8,
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <Text style={{ color: colors.text.white, fontSize: 20, paddingLeft: 20 }}>Configuração de Kits</Text>
+                    <IconButton icon={"chevron-right"} iconColor={colors.text.white} />
+                </View>
+                <View
+                    style={{
+                        padding: 20,
+                        width: "100%",
+                        backgroundColor: "#fff",
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                        flex: 1,
+                    }}
+                >
+                    <Text style={{ color: colors.text.black, fontSize: 20, paddingBottom: 20 }}>Funcionários Fixados</Text>
+                    <View style={{ width: "100%" }}>
+                        <Employee />
+                        <Employee />
+                    </View>
+                    {/* {Object.entries(user).map(([key, value]) => (
+                        <Text key={key}>
+                            {key}: {value}
+                        </Text>
+                    ))} */}
+
+                    {/* <Button mode="contained" buttonColor={colors.button} onPress={handleLogout}>
+                        Sair
+                    </Button>
+                    <Button mode="contained" buttonColor={colors.button} onPress={handleSnackbar}>
+                        snackbar
+                    </Button> */}
+                    <View style={{ flex: 1, justifyContent: "center", alignItems: "flex-end" }}>
+                        <Snackbar
+                            visible={snackbarVisible}
+                            onDismiss={() => setSnackbarVisible(false)}
+                            duration={Snackbar.DURATION_SHORT}
+                            style={{ width: "100%", backgroundColor: "green", alignSelf: "flex-end" }}
+                            wrapperStyle={{ flex: 1 }}
+                        >
+                            {snackbarMessage}
+                        </Snackbar>
+                    </View>
+                </View>
+            </View>
+        </View>
+    )
+}

@@ -6,7 +6,7 @@ import { Login } from "./screens/Login"
 import { Signup } from "./screens/Signup"
 import { Home } from "./screens/Home"
 import { useUser } from "./hooks/useUser"
-import { Test } from "./screens/Test"
+import { Panel } from "./screens/Panel"
 
 interface RouterProps {}
 
@@ -38,7 +38,7 @@ export const Routes: React.FC<RouterProps> = ({}) => {
             {/* <ImageBackground source={} resizeMode="cover" style={{ flex: 1 }}> */}
             {user ? (
                 <Stack.Navigator initialRouteName="Home" screenOptions={navigator_options}>
-                    <Stack.Screen name="Home">{(props) => <Test {...props} user={user} />}</Stack.Screen>
+                    <Stack.Screen name="Home">{(props) => <Panel {...props} user={user} />}</Stack.Screen>
                 </Stack.Navigator>
             ) : (
                 <Stack.Navigator initialRouteName="Home" screenOptions={navigator_options}>
