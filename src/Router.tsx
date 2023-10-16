@@ -7,6 +7,7 @@ import { Signup } from "./screens/Signup"
 import { Home } from "./screens/Home"
 import { useUser } from "./hooks/useUser"
 import { Panel } from "./screens/Panel"
+import { Test } from "./screens/Test"
 
 interface RouterProps {}
 
@@ -39,6 +40,7 @@ export const Routes: React.FC<RouterProps> = ({}) => {
             {user ? (
                 <Stack.Navigator initialRouteName="Home" screenOptions={navigator_options}>
                     <Stack.Screen name="Home">{(props) => <Panel {...props} user={user} />}</Stack.Screen>
+                    <Stack.Screen name="Test">{(props) => <Test {...props} />}</Stack.Screen>
                 </Stack.Navigator>
             ) : (
                 <Stack.Navigator initialRouteName="Home" screenOptions={navigator_options}>
