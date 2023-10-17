@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { View, Image } from "react-native"
-import { IconButton, Text } from "react-native-paper"
+import { Text, Icon } from "react-native-paper"
 import { colors } from "../style/colors"
 import { useUser } from "../hooks/useUser"
 
@@ -12,13 +12,13 @@ export const Employee: React.FC<EmployeeProps> = ({}) => {
     return (
         <View style={{ flexDirection: "column" }}>
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <IconButton icon={"account-circle-outline"} size={27} iconColor={colors.text.black} />
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+                    <Icon source={"account-circle-outline"} size={27} color={colors.text.black} />
                     <Text style={{ fontSize: 15 }}>Levi Weritraub</Text>
                 </View>
                 <View style={{ flexDirection: "row", alignItems: "center", gap: 0 }}>
-                    <Text style={{ fontSize: 10 }}> Ver Calendário</Text>
-                    <IconButton icon={"chevron-right"} iconColor={colors.text.black} size={15} />
+                    <Text style={{ fontSize: 10 }}>Ver Calendário</Text>
+                    <Icon source="chevron-right" color={colors.text.black} size={13} />
                 </View>
             </View>
             <View

@@ -1,7 +1,9 @@
-import * as React from "react"
+import React, { useEffect, useState } from "react"
 import { Drawer } from "react-native-paper"
 import { colors } from "../style/colors"
 import { View } from "react-native"
+import { useIo } from "../hooks/useIo"
+import { useUser } from "../hooks/useUser"
 
 interface DrawerMenuProps {
     visible: boolean
@@ -10,8 +12,26 @@ interface DrawerMenuProps {
 }
 
 export const DrawerMenu: React.FC<DrawerMenuProps> = ({ visible, user, adm }) => {
-    const [active, setActive] = React.useState("")
+    const [active, setActive] = useState("")
+    const io = useIo()
+    const { setUser } = useUser()
 
+    const handleLogout = async () => {
+        if (user) {
+            io.emit("user:logout")
+        }
+    }
+    useEffect(() => {
+        io.on("user:disconnect", () => {
+            setUser(null)
+            console.log(user)
+            alert("desconectado")
+        })
+
+        return () => {
+            io.off("user:disconnect")
+        }
+    })
     return (
         <View
             style={{
@@ -35,7 +55,6 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({ visible, user, adm }) =>
                         borderBottomLeftRadius: 20,
                         padding: 10,
                     }}
-                    showDivider={visible}
                 >
                     <View>
                         <View style={{ justifyContent: "space-between" }}>
@@ -69,6 +88,12 @@ export const DrawerMenu: React.FC<DrawerMenuProps> = ({ visible, user, adm }) =>
                             active={active === "settings"}
                             onPress={() => setActive("settings")}
                         />
+                        {/* <Drawer.Item
+                            icon={"logout"}
+                            label="Sair"
+                            active={active === "logout"}
+                            onPress={() => handleLogout}
+                        /> */}
                     </View>
                 </Drawer.Section>
             )}

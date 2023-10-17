@@ -8,6 +8,7 @@ import { Home } from "./screens/Home"
 import { useUser } from "./hooks/useUser"
 import { Panel } from "./screens/Panel"
 import { Test } from "./screens/Test"
+import { SettingsKit } from "./screens/Panel/SettingsKit"
 
 interface RouterProps {}
 
@@ -41,6 +42,7 @@ export const Routes: React.FC<RouterProps> = ({}) => {
                 <Stack.Navigator initialRouteName="Home" screenOptions={navigator_options}>
                     <Stack.Screen name="Home">{(props) => <Panel {...props} user={user} />}</Stack.Screen>
                     <Stack.Screen name="Test">{(props) => <Test {...props} />}</Stack.Screen>
+                    <Stack.Screen name="SettingsKit">{(props) => <SettingsKit {...props} user={user} />}</Stack.Screen>
                 </Stack.Navigator>
             ) : (
                 <Stack.Navigator initialRouteName="Home" screenOptions={navigator_options}>

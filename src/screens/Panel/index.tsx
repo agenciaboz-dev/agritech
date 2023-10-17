@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react"
 import { Image, View } from "react-native"
-import { Button, IconButton, Snackbar, Text } from "react-native-paper"
-import { colors } from "../style/colors"
-import { useIo } from "../hooks/useIo"
-import { useUser } from "../hooks/useUser"
+import { Button, IconButton, Snackbar, Text, Icon, BottomNavigation } from "react-native-paper"
+import { colors } from "../../style/colors"
+import { useIo } from "../../hooks/useIo"
+import { useUser } from "../../hooks/useUser"
 import LinearGradient from "react-native-linear-gradient"
-import { image } from "../image"
-import { Employee } from "../components/Employee"
-import { DrawerMenu } from "../components/DrawerMenu"
+import { image } from "../../image"
+import { Employee } from "../../components/Employee"
+import { DrawerMenu } from "../../components/DrawerMenu"
 import { NavigationProp } from "@react-navigation/native"
+import { ButtonComponent } from "../../components/ButtonComponent"
+import BottomMenu from "../../components/BottomMenu"
 
 interface PanelProps {
     user: User
@@ -35,6 +37,7 @@ export const Panel: React.FC<PanelProps> = ({ user, navigation }) => {
     }
 
     console.log(visibleMenu)
+
     useEffect(() => {
         io.on("user:disconnect", () => {
             setUser(null)
@@ -87,7 +90,11 @@ export const Panel: React.FC<PanelProps> = ({ user, navigation }) => {
                         }}
                     >
                         <Text style={{ color: colors.text.white, fontSize: 20, paddingLeft: 20 }}>Configuração de Kits</Text>
-                        <IconButton icon={"chevron-right"} iconColor={colors.text.white} />
+                        <IconButton
+                            icon={"chevron-right"}
+                            iconColor={colors.text.white}
+                            onPress={() => navigation.navigate("SettingsKit")}
+                        />
                     </View>
                     <View
                         style={{
@@ -97,16 +104,77 @@ export const Panel: React.FC<PanelProps> = ({ user, navigation }) => {
                             borderTopLeftRadius: 20,
                             borderTopRightRadius: 20,
                             flex: 1,
+                            gap: 50,
                         }}
                     >
                         <DrawerMenu adm visible={visibleMenu} />
-                        <Text style={{ color: colors.text.black, fontSize: 20, paddingBottom: 20 }}>
-                            Funcionários Fixados
-                        </Text>
-                        <View style={{ width: "100%" }}>
-                            <Employee />
-                            <Employee />
+                        <View>
+                            <Text style={{ color: colors.text.black, fontSize: 20, paddingBottom: 20 }}>
+                                Funcionários Fixados
+                            </Text>
+                            <View style={{ width: "100%" }}>
+                                <Employee />
+                                <Employee />
+                            </View>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    gap: 20,
+                                }}
+                            >
+                                <ButtonComponent title="Cadastrar novo funcionário" handleSubmit={() => {}} />
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        width: "20%",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                    }}
+                                >
+                                    <Text style={{ color: colors.primary }} onPress={() => {}}>
+                                        Ver todos
+                                    </Text>
+                                    <Icon source="chevron-right" color={colors.primary} size={15} />
+                                </View>
+                            </View>
                         </View>
+                        <View>
+                            <Text style={{ color: colors.text.black, fontSize: 20, paddingBottom: 20 }}>
+                                Produtores Fixados
+                            </Text>
+                            <View style={{ width: "100%" }}>
+                                <Employee />
+                                <Employee />
+                            </View>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    gap: 20,
+                                }}
+                            >
+                                <ButtonComponent title="Cadastrar novo funcionário" handleSubmit={() => {}} />
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        width: "20%",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                    }}
+                                >
+                                    <Text style={{ color: colors.primary }} onPress={() => {}}>
+                                        Ver todos
+                                    </Text>
+                                    <Icon source="chevron-right" color={colors.primary} size={15} />
+                                </View>
+                            </View>
+                        </View>
+
                         {/* {Object.entries(user).map(([key, value]) => (
                         <Text key={key}>
                         {key}: {value}
@@ -132,6 +200,7 @@ export const Panel: React.FC<PanelProps> = ({ user, navigation }) => {
                         </View>
                     </View>
                 </View>
+                <BottomMenu user={user} navigation={navigation} />
             </View>
         </>
     )
